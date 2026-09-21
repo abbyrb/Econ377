@@ -1,0 +1,23 @@
+#ECN 377 - Day 9 STARTER  |  Deriving the OLS estimates
+## ------------------------------------------------------------------
+## The derivation ends at  beta1-hat = cov(x,y)/var(x),  beta0-hat = ybar - beta1*xbar.
+## ------------------------------------------------------------------
+
+## ---- Demo: estimate the wage-education line, by hand ----
+library(wooldridge)
+data("wage1")
+x <- wage1$educ     # X = education
+y <- wage1$wage     # Y = wage
+b1 <- cov(x,y) / var(x) # slope      -- the derived formula:  cov(x, y) / var(x)
+b1 #=[1] 0.5413593
+b0 <- (mean(y)-b1)*mean(x)        # intercept  -- mean(y) - b1 * mean(x)
+b0 #=[1] 67.27024
+c(b0 = b0, b1 = b1) # the fitted line  (should be about -0.90 and 0.54)
+
+## ================= YOUR TURN =========================
+## Tiny dataset:  x = (1, 2, 3),  y = (2, 2, 5)
+x <- c(1, 2, 3)
+y <- c(2, 2, 5)
+b1    <- ______   # (a) slope
+b0    <- ______   # (b) intercept
+     
