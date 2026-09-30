@@ -24,7 +24,7 @@
 # Formula: SST = SSE + SSR
 # Answer: SSE + SSR
 
-# Q6: Sum of OLS residuals (\sum u_hat)
+# Q6: Sum of OLS residuals (sum u_hat)
 # Answer: 0
 
 # Q7: R-squared close to 0
@@ -133,6 +133,27 @@ SSR <- 150
 
 SSE <- SST - SSR
 round(SSE, 2)
+
+# ------------------------------------------------------------------------------
+# Q17: FIND R-SQUARED FROM SST AND SSR
+# Formula: R2 = 1 - (SSR / SST)
+# ------------------------------------------------------------------------------
+SST <- 300
+SSR <- 157
+
+R2 <- 1 - (SSR / SST)
+round(R2, 2)
+
+
+# ------------------------------------------------------------------------------
+# Q18: FIND R-SQUARED FROM SSE AND SST
+# Formula: R2 = SSE / SST
+# ------------------------------------------------------------------------------
+SSE <- 52
+SST <- 279
+
+R2 <- SSE / SST
+round(R2, 2)
 
 
 # ------------------------------------------------------------------------------
