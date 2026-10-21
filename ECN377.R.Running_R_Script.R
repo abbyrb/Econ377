@@ -95,6 +95,7 @@ y_bar
 
 ## If y is multiplied by c, both b0_hat and b1_hat are multipled by c ##
 ## If x is multiplied by c, b1_hat is multiplied by 1/c and b0_hat does not change ##
+  # BUT inside of a "log" these do not apply -> b1_hat does not change; only b0_hat changes
 
 ## Find the OLS slope ##
 library('wooldridge')
