@@ -103,6 +103,7 @@ reg <- lm(salary ~ sales, data = ceosal1)
 reg
 b0 <- reg$coefficients[1]
 b1 <- reg$coefficients[2]
+# measured in dollars rather than 1000s:
 new_b1 <- b1*1000 # Rescale by multiplying by 1000
 
 ## Level-Level Regression ##
