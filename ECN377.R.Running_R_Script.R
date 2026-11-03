@@ -135,9 +135,11 @@ data('')
 reg <- lm(log() ~ ____ , data = ) 
 b1 <- reg$coefficients[2]
 
+
 b1 <- 
-  change_in_x <- 
-  percent_change_y <- 100*b1*change_in_x
+change_in_x <- 
+percent_change_y <- 100*b1*change_in_x   
+  percent_change_y <- 100* (b1*x1 + b2*x2) #MLR
 round(percent_change_y, 2)
 
 data('ceosal1')
@@ -324,3 +326,45 @@ slope_1 <-
 multiple_regression_b1 <- b1_hat + b2_hat*slope_1
 round(multiple_regression_b1, 2)
 
+## Find predicted colGPA at ACT = mean(gpa1$ACT) and hsGPA = mean(gpa1$hsGPA)
+data('gpa1')
+reg2 <- lm(colGPA ~ ACT + hsGPA, data = gpa1)
+reg2$coefficients
+b0 <- reg2$coefficients[1]
+b1 <- reg2$coefficients[2]
+b2 <- reg2$coefficients[3]
+act.mean <- mean(gpa1$ACT)
+hsgpa.mean <- mean(gpa1$hsGPA)
+predicted.colGPA <- (b0 + b1*mean(gpa1$ACT) + b2*mean(gpa1$hsGPA))
+round(predicted.colGPA, 2)
+mean(gpa1$colGPA) #check -> this should be the same
+
+## MLR.1-4 
+  # 1. The population model must take the form: Y = b0 + b1*x1 + b2*x2+...+ bk*xk + U
+  # 2. You have a random sample of n observations drawn from the population.
+  # 3. Xj must vary across observations, no variable is the sum or multiple of others, sample size must exceed parameters (n>=k+1)
+  # 4.  The unobserved error term $U$ has an expected value of zero given any values of the independent variables 
+        # violation: omitted variable bias
+
+## Find the multiple-regression slope b1_hat
+b1.SLR <- 
+b2.MLR <- 
+slope.x <- 
+b1.MLR <- b1.SLR - b2.MLR*slope.x
+round(b1.MLR, 2)
+
+  #Using regression lines, find b2hat*slope.x:
+data('bwght')
+reg3 <- lm(bwght ~ cigs, data = bwght)
+reg3$coefficients           
+reg4 <- lm(bwght ~ cigs + faminc, data = bwght)
+reg4$coefficients
+reg5 <- lm(faminc ~ cigs, data = bwght)
+slope.x <- reg5$coefficients[2]
+b2hat <- reg4$coefficients[3]
+slope.x*b2hat 
+reg3$coefficients[2] - reg4$coefficients[2] #checker -> should equal
+
+#Regress Y on X1 alone, leaving out X2. When does this cause no omitted-variable bias in the slope on X1?
+  # 1. X2 has no c.p. effect on Y (b2 = 0)
+  # 2. X2 is uncorrelated with X1 in the sample (slope = 0)
