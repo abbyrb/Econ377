@@ -39,7 +39,7 @@ round(cor_xy, 2)
 x <- c()
 y <- c()
 reg <- lm(y~x)
-round(resid(reg)[3], 2)
+round(resid(reg)[_], 2)
 
 ## Find the _ residual ##
 # OLS residual always sum to zero
@@ -58,8 +58,9 @@ sum(x * u_hat) #if you get an insanely small negative number like "-8.7e-15" put
 
 ## Find the sum of squared residuals SSR ##
 # R2 = SSE/SST
-# SST = SSE + SSR --> Sy_squared*(n-1)
+# SST = SSE + SSR --> (n-1)*Sy_squared
 # SSR = SST - SSE --> (n-1)*S_uhat_squared
+# SSE = (n-1)*Sy_hat_squared
 SSE <- 
   R2 <-
   SST <- SSE/R2
@@ -150,6 +151,19 @@ change_in_roe <-
 percent_change_salary <- 100*b_roe*change_in_roe
 round(percent_change_salary, 2) 
 
+  ## Find the log-level regression lm(log(wage) ~ exper, data = wage1). ##
+    #By about what percent does predicted wage change with __ more years of experience?
+library('wooldridge')
+data('wage1')
+reg <- lm(log(wage) ~ exper, data = wage1)
+reg
+b0 <- reg$coefficients[1]
+b1 <- reg$coefficients[2]
+percent_change_x <- 
+  percent_change_y <- 100*b1*percent_change_x
+round(percent_change_y, 2)
+
+
 ## Log-Log Regression: Find what percent does y change when x rises by __ for log-log regression ##
 # % change_in_y = b1 * % change_in_x
 library('wooldridge')
@@ -162,18 +176,6 @@ b1 <-
   percent_change_y <- b1*percent_change_x
 round(percent_change_y, 2)
 
-
-## Find the log-level regression lm(log(wage) ~ exper, data = wage1). ##
-#By about what percent does predicted wage change with __ more years of experience?
-library('wooldridge')
-data('wage1')
-reg <- lm(log(wage) ~ exper, data = wage1)
-reg
-b0 <- reg$coefficients[1]
-b1 <- reg$coefficients[2]
-percent_change_x <- 
-  percent_change_y <- 100*b1*percent_change_x
-round(percent_change_y, 2)
 
 ## Regression: log(salary_hat) = 5.11 + 0.16*log(sales) -> If salary is measured in dollars instead (every salary times 1000), what is the new intercept? ##
 b0 <- 
@@ -188,8 +190,8 @@ round(new_b0, 2)
   #FALSE - variables are biased; commonly fails b/c of omitted variable bias
 
 # An omitted variable causes bias in OLS if it satisfies two conditions: 
-  # It affects the dependent variable. 
-  # It is correlated with the explanatory variable. 
+  # It affects the dependent variable (Y)
+  # It is correlated with the explanatory variable (X)
 
 # Find the variance of b1_hat with the error variance and SST_x
 # SST_x = (n-1)*Sx^2
@@ -197,6 +199,8 @@ error_var <-
   SST_x <- 
   var_b1_hat <- error_var / SST_x
 round(var_b1_hat, 2)
+
+
 
 # Find estimates of standard deviation for b1_hat ##
 # sd(b1_hat) = error_sd / sqrt(SST_x)
@@ -262,6 +266,21 @@ n <-
   error_hat <- sqrt(SSR / (n - 2))
 standard_error_b0_hat <- error_hat * sqrt((1 / n) + (x_bar^2 / SST_x))
 round(standard_error_b0_hat, 2)
+
+reg <- lm(wage ~ educ, data = wage1)
+n <- nrow(wage1)
+df <- n - 2
+SSR <- sum(resid(reg)^2)
+sigma_hat_sq <- SSR / df
+sigma_hat <- sqrt(sigma_hat_sq)
+x_bar <- mean(wage1$educ)
+SST_x <- sum((wage1$educ - x_bar)^2)
+var_b0 <- sigma_hat_sq * ((1 / n) + (x_bar^2 / SST_x))
+se_b0_manual <- sqrt(var_b0)
+se_b0_auto <- summary(reg)$coefficients["(Intercept)", "Std. Error"]
+round(se_b0_manual, 4)
+round(se_b0_auto, 4)
+
 
 # Find standard error of regression (sigma_hat) using a regression line
 data('')
@@ -339,6 +358,14 @@ predicted.colGPA <- (b0 + b1*mean(gpa1$ACT) + b2*mean(gpa1$hsGPA))
 round(predicted.colGPA, 2)
 mean(gpa1$colGPA) #check -> this should be the same
 
+reg_gpa <- lm(colGPA ~ hsGPA + ACT + skipped, data = gpa1)
+b0 <- reg_gpa$coefficients[1]
+b1 <- reg_gpa$coefficients[2]
+b2 <- reg_gpa$coefficients[3]
+b3 <- reg_gpa$coefficients[4]
+predicted.colGPA <- (b0 + b1*mean(gpa1$hsGPA) + b2*mean(gpa1$ACT) + b3*mean(gpa1$skipped))
+round(predicted.colGPA, 2)
+
 ## MLR.1-4 
   # 1. The population model must take the form: Y = b0 + b1*x1 + b2*x2+...+ bk*xk + U
   # 2. You have a random sample of n observations drawn from the population.
@@ -353,7 +380,7 @@ slope.x <-
 b1.MLR <- b1.SLR - b2.MLR*slope.x
 round(b1.MLR, 2)
 
-  #Using regression lines, find b2hat*slope.x:
+  #Using regression lines, find b2hat*slope.x: (*also equals bias(b1_squiggle)=E[b1_squiggle]-b1)
 data('bwght')
 reg3 <- lm(bwght ~ cigs, data = bwght)
 reg3$coefficients           
@@ -368,3 +395,19 @@ reg3$coefficients[2] - reg4$coefficients[2] #checker -> should equal
 #Regress Y on X1 alone, leaving out X2. When does this cause no omitted-variable bias in the slope on X1?
   # 1. X2 has no c.p. effect on Y (b2 = 0)
   # 2. X2 is uncorrelated with X1 in the sample (slope = 0)
+
+#Step-by-Step Manual Standard Error
+library('wooldridge')
+data('hprice1')
+reg6 <- lm(price ~ sqrft + bdrms + lotsize, data = hprice1)
+n <- nrow(hprice1)
+k <-
+df <- n-k-1
+SSR <- sum(reg6$residuals^2)
+sigma_hat <- sqrt(SSR/df)
+SSTj <- sum((hprice1$sqrft - mean(hprice1$sqrft))^2) # or (n-1)*Sx2
+R2j <- summary(lm(sqrft ~ bdrms + lotsize, data = hprice1))$r.squared
+se <- sigma_hat / sqrt(SSTj*(1-R2j))
+round(se, 2)
+summary(reg6)$coefficients["sqrft", "Std. Error"]
+summary(reg6)
