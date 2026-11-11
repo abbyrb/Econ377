@@ -379,6 +379,12 @@ b2.MLR <-
 slope.x <- 
 b1.MLR <- b1.SLR - b2.MLR*slope.x
 round(b1.MLR, 2)
+    ## Find slope.x
+b1.SLR <- 
+b2.MLR <- 
+b1.MLR <- 
+slope.x <- (b1.SLR - b1.MLR)/b2.MLR
+round(slope.x, 2)
 
   #Using regression lines, find b2hat*slope.x: (*also equals bias(b1_squiggle)=E[b1_squiggle]-b1)
 data('bwght')
