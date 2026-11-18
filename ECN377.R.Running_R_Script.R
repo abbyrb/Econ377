@@ -139,8 +139,14 @@ b1 <- reg$coefficients[2]
 
 b1 <- 
 change_in_x <- 
-percent_change_y <- 100*b1*change_in_x   
-  percent_change_y <- 100* (b1*x1 + b2*x2) #MLR
+percent_change_y <- 100*b1*change_in_x  
+round(percent_change_y, 2)
+
+b1 <- 
+x1 <- 
+b2 <-
+x2 <-
+percent_change_y <- 100* (b1*x1 + b2*x2) #MLR
 round(percent_change_y, 2)
 
 data('ceosal1')
@@ -335,7 +341,7 @@ data('ceosal1')
 reg4 <- lm(log(salary) ~ log(sales) + roe, data = ceosal1)
 reg4$coefficients
 b <- coef(reg4)
-exp_log_ <- exp(b[1] + b[2]*log(____) + b[3]*___)
+exp_log_salary <- exp(b[1] + b[2]*log(____) + b[3]*___)
 round(exp_log_salary, 2)
 
 ## Find new b1 from simple and multiple regression slopes
@@ -379,12 +385,6 @@ b2.MLR <-
 slope.x <- 
 b1.MLR <- b1.SLR - b2.MLR*slope.x
 round(b1.MLR, 2)
-    ## Find slope.x
-b1.SLR <- 
-b2.MLR <- 
-b1.MLR <- 
-slope.x <- (b1.SLR - b1.MLR)/b2.MLR
-round(slope.x, 2)
 
   #Using regression lines, find b2hat*slope.x: (*also equals bias(b1_squiggle)=E[b1_squiggle]-b1)
 data('bwght')
@@ -417,3 +417,47 @@ se <- sigma_hat / sqrt(SSTj*(1-R2j))
 round(se, 2)
 summary(reg6)$coefficients["sqrft", "Std. Error"]
 summary(reg6)
+
+#Find t-statistic: Ho: bj = 0 -> t = bj_hat / se(bj_hat)
+library('wooldridge')
+data('wage1')
+reg <- lm(log(wage) ~ educ + exper + tenure, data = wage1)
+s <- summary(reg)$coefficients
+summary(reg)$coefficients
+s[4,1] / s[4,2]
+s[4,3]
+  
+#T-STATISTICS
+#a: Under MLR1-6 (Bj_hat - Bj)/sd(Bj_hat) has a n. distribution while (Bj_hat - Bj)/se(Bj_hat) has a t. distribution. WHY?
+  #The standard error replaces the unknown with the estimate which varies from sample to sample.
+  #dividing by se(Bj_hat) introduces extra randomness, which shifts the distribution from a standard normal $N(0,1)$ to a $t$ distribution.
+
+#b:What happened to b1_hat n. distribution and t. distribution as larger and larger samples grew? 
+#Hint: b1_hat is unbiased and its standard deviation shrinks as n grows. The t-statistic divides by the standard error.
+  #The histrogram, of b1_hat concentrated around true b1 while the histogram of the t kept its width and looked more and more like N(0,1) 
+  #Because OLS is unbiased (E[b1_hat] = b1) and its standard deviation shrinks as sample size n grows the distribution of collapses tighter around true b1
+  #as n grows, se gets closer to sd
+
+#c: reject Ho in favor of H1 if t_bj_hat > c
+
+#d: alpha -> probability of rejecting Ho even when it is true (0.05 = 5%)
+
+#RESCALING RULES
+  ##Dependent Variable (y): 
+      #Multiplied by c:
+        #slope -> multiplied by c
+        #intercept -> multiplied by c
+        #R.squared -> does not change
+      #Divided by k:
+        #slope -> divided by k
+        #intercept -> divided by k
+        #R.squared -> does not change
+  ##Independent Variable (x): 
+      #Multiplied by c
+        #slope -> divided by c
+        #intercept -> does not change
+        #R.squared -> does not change
+      #Divided by k:
+        #slope -> multiplied by k
+        #intercept -> does not change
+        #R.squared -> does not change
