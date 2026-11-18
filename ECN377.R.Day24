@@ -1,0 +1,35 @@
+## ECN 377 - Day 24 STARTER  |  One-sided tests (finish); two-sided tests: the idea
+## ------------------------------------------------------------------
+## H1: beta > 0   ->  reject H0 if t > c,    c = qt(1 - alpha, df)   (right tail)
+## H1: beta < 0   ->  reject H0 if t < c,    c = qt(alpha, df)       (left tail, c is negative)
+## H1: beta != 0  ->  reject H0 if |t| > c,  c = qt(1 - alpha/2, df)   (alpha/2 in EACH tail)
+## The DEMO at the end draws a two-sided test in pictures.
+## Fill each ______ and ANSWER, then upload to GitHub.
+## ------------------------------------------------------------------
+
+library(wooldridge)
+
+## ---- Example 4.1: is the return to experience positive? ----
+## H0: beta = 0 vs H1: beta > 0 for exper
+data("wage1")
+reg <- lm(log(wage) ~ educ + exper + tenure, data = wage1)
+s <- summary(reg)$coefficients
+s
+t_exper <- s[3,3]    # t value for exper   (hint: s[row, column])
+alpha <- 0.05
+k <- 3
+c_05 <- qt(1-alpha, df = nrow(wage1)-k-1)       # 5% critical value   (hint: df = reg$df.residual)
+alpha <- 0.01
+c_01 <- qt(1-alpha, df = nrow(wage1)-k-1)         # 1% critical value
+## Reject H0 at 5%? At 1%?                    ANSWER:
+
+## ---- Example 4.2: do larger schools do worse? ----
+## H0: beta = 0 vs H1: beta < 0 for enroll
+data("meap93")
+reg <- lm(math10 ~ totcomp + staff + enroll, data = meap93)
+s <- summary(reg)$coefficients
+s
+t_enroll <- s[4,3]    # t value for enroll
+alpha <- 0.05
+k <- 3
+c_left <- qt(alpha, df = nrow(meap93)-k-1)     # 5% critical value   
