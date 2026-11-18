@@ -1,9 +1,6 @@
 ## ECN 377 - Day 10 STARTER  |  lm(), fitted values, residuals
 ## ------------------------------------------------------------------
 ## lm() is the shortcut for the OLS line we derived by hand on Day 9.
-## Fill each ______ as we go, then COMMIT + PUSH.
-## ------------------------------------------------------------------
-
 library(wooldridge)
 data("wage1")
 
